@@ -1,32 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>ResumeBoost AI</title>
-</head>
-<body>
-  <h1>Welcome to ResumeBoost AI</h1>
-  <p>Your AI-powered Resume & Cover Letter Generator</p>
-  <form id="resumeForm">
-    <label>Paste your resume:</label><br>
-    <textarea id="resume" rows="10" cols="50"></textarea><br><br>
-    <label>Job Title:</label><br>
-    <input type="text" id="jobTitle"><br><br>
-    <button type="submit">Generate Resume</button>
-  </form>
-  <pre id="output"></pre>
+<script>
+  const form = document.getElementById("resumeForm");
 
-  <script>
-    const form = document.getElementById('resumeForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const resume = document.getElementById('resume').value;
-      const jobTitle = document.getElementById('jobTitle').value;
-      document.getElementById('output').innerText = 'Generating AI resume...';
-      // Here we will call OpenAI API later
-      setTimeout(() => {
-        document.getElementById('output').innerText = `AI-generated resume for ${jobTitle}:\n\n${resume}\n\n[This is a demo output]`;
-      }, 1000);
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const resume = document.getElementById("resume").value;
+    const jobTitle = document.getElementById("jobTitle").value;
+    const output = document.getElementById("output");
+
+    output.innerText = "Generating AI resume...";
+
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ resume, jobTitle })
     });
-  </script>
-</body>
-</html>
+
+    const data = await response.json();
+    output.innerText = data.result;
+  });
+</script>
